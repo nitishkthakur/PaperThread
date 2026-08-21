@@ -1,0 +1,119 @@
+{
+  "strategy": "syllabus",
+  "model": "deepseek-v4-pro:cloud",
+  "runs": [
+    {
+      "topic": "dropout in neural networks",
+      "seconds": 37.46349929198914,
+      "step_count": 8,
+      "degraded": false,
+      "notes": [
+        "8 steps: 3 prerequisite, 1 anchor, 4 follow-up. Planned by deepseek-v4-pro:cloud."
+      ],
+      "stages_run": [
+        "strategy:syllabus"
+      ],
+      "steps": [
+        {
+          "position": 1,
+          "stage": "prerequisite",
+          "year": 1986,
+          "title": "Learning representations by back-propagating errors",
+          "authors": [
+            "David E. Rumelhart",
+            "Geoffrey E. Hinton",
+            "Ronald J. Williams"
+          ],
+          "teaches": "Training neural networks by gradient descent via backpropagation",
+          "why_here": "Dropout is a regularization technique applied during neural network training; the reader must first understand how networks are trained with backpropagation."
+        },
+        {
+          "position": 2,
+          "stage": "prerequisite",
+          "year": 1992,
+          "title": "A Practical Bayesian Framework for Backpropagation Networks",
+          "authors": [
+            "David Mackay"
+          ],
+          "teaches": "Overfitting and regularization in neural networks",
+          "why_here": "Dropout addresses overfitting, so this step introduces the problem of overfitting and classical regularization approaches, building on backpropagation."
+        },
+        {
+          "position": 3,
+          "stage": "prerequisite",
+          "year": 1996,
+          "title": "Bagging Predictors",
+          "authors": [
+            "Leo Breiman"
+          ],
+          "teaches": "Ensemble averaging to reduce variance",
+          "why_here": "Dropout approximates an ensemble of subnetworks; bagging provides the conceptual foundation for why averaging multiple models improves generalization."
+        },
+        {
+          "position": 4,
+          "stage": "anchor",
+          "year": 2014,
+          "title": "Dropout: a simple way to prevent neural networks from overfitting",
+          "authors": [
+            "Nitish Srivastava",
+            "Geoffrey E. Hinton",
+            "Alex Krizhevsky"
+          ],
+          "teaches": "Randomly dropping units during training to prevent co-adaptation",
+          "why_here": "This is the core paper that introduces dropout, combining the regularization goal from step 2 with the ensemble idea from step 3."
+        },
+        {
+          "position": 5,
+          "stage": "followup",
+          "year": 2013,
+          "title": "Understanding Dropout",
+          "authors": [
+            "Pierre Baldi",
+            "Peter Sadowski"
+          ],
+          "teaches": "Analysis of dropout as ensemble averaging and adaptive regularization",
+          "why_here": "After the anchor, this paper provides a theoretical analysis of why dropout works, explicitly connecting it to the bagging concept from step 3."
+        },
+        {
+          "position": 6,
+          "stage": "followup",
+          "year": 2015,
+          "title": "Dropout as a Bayesian Approximation: Representing Model Uncertainty in\\n Deep Learning",
+          "authors": [
+            "Yarin Gal",
+            "Zoubin Ghahramani"
+          ],
+          "teaches": "Dropout as approximate Bayesian inference",
+          "why_here": "Building on the empirical understanding from step 5, this paper gives a Bayesian interpretation of dropout, linking it to model uncertainty."
+        },
+        {
+          "position": 7,
+          "stage": "followup",
+          "year": 2015,
+          "title": "Variational Dropout and the Local Reparameterization Trick",
+          "authors": [
+            "Diederik P. Kingma",
+            "Tim Salimans",
+            "Max Welling"
+          ],
+          "teaches": "Learning per-weight dropout rates via variational inference",
+          "why_here": "Extends the Bayesian view from step 6 by making dropout rates learnable parameters, improving regularization adaptivity."
+        },
+        {
+          "position": 8,
+          "stage": "followup",
+          "year": 2017,
+          "title": "Concrete Dropout",
+          "authors": [
+            "Yarin Gal",
+            "Jiri Hron",
+            "Alex Kendall"
+          ],
+          "teaches": "Automatic tuning of dropout rate with continuous relaxation",
+          "why_here": "Further automates dropout rate selection, building on the variational dropout framework from step 7 to provide a practical adaptive method."
+        }
+      ],
+      "error": null
+    }
+  ]
+}

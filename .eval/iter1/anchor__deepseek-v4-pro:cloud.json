@@ -1,0 +1,972 @@
+{
+  "strategy": "anchor",
+  "model": "deepseek-v4-pro:cloud",
+  "runs": [
+    {
+      "topic": "dropout in neural networks",
+      "seconds": 65.9665243329946,
+      "step_count": 9,
+      "degraded": false,
+      "notes": [
+        "9 steps: 3 prerequisite, 1 anchor, 5 follow-up. Planned by deepseek-v4-pro:cloud."
+      ],
+      "stages_run": [
+        "strategy:anchor"
+      ],
+      "steps": [
+        {
+          "position": 1,
+          "stage": "prerequisite",
+          "year": 1992,
+          "title": "Simplifying Neural Networks by Soft Weight-Sharing",
+          "authors": [
+            "Steven J. Nowlan",
+            "Geoffrey E. Hinton"
+          ],
+          "teaches": "Regularization in neural networks by adding penalty terms to the error function to prevent overfitting",
+          "why_here": "Dropout is a regularization technique; understanding prior regularization methods helps grasp the problem dropout solves."
+        },
+        {
+          "position": 2,
+          "stage": "prerequisite",
+          "year": 2006,
+          "title": "Nightmare at test time",
+          "authors": [
+            "Amir Globerson",
+            "Sam T. Roweis"
+          ],
+          "teaches": "Robustness to missing or corrupted features at test time",
+          "why_here": "Dropout randomly drops units during training to simulate missing features, so this paper introduces the problem of feature deletion robustness."
+        },
+        {
+          "position": 3,
+          "stage": "prerequisite",
+          "year": 2008,
+          "title": "Extracting and composing robust features with denoising autoencoders",
+          "authors": [
+            "Pascal Vincent",
+            "Hugo Larochelle",
+            "Yoshua Bengio"
+          ],
+          "teaches": "Training neural networks with corrupted inputs to learn robust representations (denoising autoencoders)",
+          "why_here": "Dropout extends the idea of corrupting inputs to corrupting hidden units, so this paper introduces the core concept of noise injection for robustness."
+        },
+        {
+          "position": 4,
+          "stage": "anchor",
+          "year": 2014,
+          "title": "Dropout: a simple way to prevent neural networks from overfitting",
+          "authors": [
+            "Nitish Srivastava",
+            "Geoffrey E. Hinton",
+            "Alex Krizhevsky"
+          ],
+          "teaches": "dropout in neural networks itself",
+          "why_here": "The paper that introduced the topic you asked about \u2014 everything before this exists to make it readable."
+        },
+        {
+          "position": 5,
+          "stage": "followup",
+          "year": 2015,
+          "title": "Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift",
+          "authors": [
+            "Sergey Ioffe",
+            "Christian Szegedy"
+          ],
+          "teaches": "Where the idea went next",
+          "why_here": "Builds on the anchor paper and is itself widely cited, so it is the natural continuation once the anchor is understood."
+        },
+        {
+          "position": 6,
+          "stage": "followup",
+          "year": 2024,
+          "title": "Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift",
+          "authors": [
+            "Sergey Ioffe"
+          ],
+          "teaches": "Where the idea went next",
+          "why_here": "Builds on the anchor paper and is itself widely cited, so it is the natural continuation once the anchor is understood."
+        },
+        {
+          "position": 7,
+          "stage": "followup",
+          "year": 2019,
+          "title": "A survey on Image Data Augmentation for Deep Learning",
+          "authors": [
+            "Connor Shorten",
+            "Taghi M. Khoshgoftaar"
+          ],
+          "teaches": "Where the idea went next",
+          "why_here": "Builds on the anchor paper and is itself widely cited, so it is the natural continuation once the anchor is understood."
+        },
+        {
+          "position": 8,
+          "stage": "followup",
+          "year": 2014,
+          "title": "Explaining and Harnessing Adversarial Examples",
+          "authors": [
+            "Ian Goodfellow",
+            "Jonathon Shlens",
+            "Christian Szegedy"
+          ],
+          "teaches": "Where the idea went next",
+          "why_here": "Builds on the anchor paper and is itself widely cited, so it is the natural continuation once the anchor is understood."
+        },
+        {
+          "position": 9,
+          "stage": "followup",
+          "year": 2021,
+          "title": "Review of deep learning: concepts, CNN architectures, challenges, applications, future directions",
+          "authors": [
+            "Laith Alzubaidi",
+            "Jinglan Zhang",
+            "Amjad J. Humaidi"
+          ],
+          "teaches": "Where the idea went next",
+          "why_here": "Builds on the anchor paper and is itself widely cited, so it is the natural continuation once the anchor is understood."
+        }
+      ],
+      "error": null
+    },
+    {
+      "topic": "batch normalization",
+      "seconds": 39.277539124988834,
+      "step_count": 9,
+      "degraded": false,
+      "notes": [
+        "9 steps: 4 prerequisite, 1 anchor, 4 follow-up. Planned by deepseek-v4-pro:cloud."
+      ],
+      "stages_run": [
+        "strategy:anchor"
+      ],
+      "steps": [
+        {
+          "position": 1,
+          "stage": "prerequisite",
+          "year": 2000,
+          "title": "Improving predictive inference under covariate shift by weighting the log-likelihood function",
+          "authors": [
+            "Hidetoshi Shimodaira"
+          ],
+          "teaches": "covariate shift in statistical learning",
+          "why_here": "The target paper defines internal covariate shift by analogy; without this concept, the core problem is unclear."
+        },
+        {
+          "position": 2,
+          "stage": "prerequisite",
+          "year": 2010,
+          "title": "Understanding the difficulty of training deep feedforward neural networks",
+          "authors": [
+            "Xavier Glorot",
+            "Yoshua Bengio"
+          ],
+          "teaches": "why deep networks are hard to train: vanishing/exploding gradients, saturation, initialization sensitivity",
+          "why_here": "The target paper argues batch normalization mitigates these difficulties; the reader needs to know the baseline problems."
+        },
+        {
+          "position": 3,
+          "stage": "prerequisite",
+          "year": 2012,
+          "title": "Deep Learning Made Easier by Linear Transformations in Perceptrons",
+          "authors": [
+            "Tapani Raiko",
+            "Harri Valpola",
+            "Yann LeCun"
+          ],
+          "teaches": "normalizing hidden unit outputs to zero mean and unit slope with shortcut connections",
+          "why_here": "The target paper builds on this idea of transforming hidden activations; it is a direct precursor to batch normalization."
+        },
+        {
+          "position": 4,
+          "stage": "prerequisite",
+          "year": 2014,
+          "title": "Mean-normalized stochastic gradient for large-scale deep learning",
+          "authors": [
+            "Simon Wiesler",
+            "Alexander Richard",
+            "Ralf Schl\u00fcter"
+          ],
+          "teaches": "mean normalization of features improves SGD convergence",
+          "why_here": "The target paper cites mean subtraction as prior work and shows why full batch normalization is needed; the reader should know this partial solution."
+        },
+        {
+          "position": 5,
+          "stage": "anchor",
+          "year": 2015,
+          "title": "Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift",
+          "authors": [
+            "Sergey Ioffe",
+            "Christian Szegedy"
+          ],
+          "teaches": "batch normalization itself",
+          "why_here": "The paper that introduced the topic you asked about \u2014 everything before this exists to make it readable."
+        },
+        {
+          "position": 6,
+          "stage": "followup",
+          "year": 2017,
+          "title": "Inception-v4, Inception-ResNet and the Impact of Residual Connections on Learning",
+          "authors": [
+            "Christian Szegedy",
+            "Sergey Ioffe",
+            "Vincent Vanhoucke"
+          ],
+          "teaches": "Where the idea went next",
+          "why_here": "Builds on the anchor paper and is itself widely cited, so it is the natural continuation once the anchor is understood."
+        },
+        {
+          "position": 7,
+          "stage": "followup",
+          "year": 2017,
+          "title": "Beyond a Gaussian Denoiser: Residual Learning of Deep CNN for Image Denoising",
+          "authors": [
+            "Kai Zhang",
+            "Wangmeng Zuo",
+            "Yunjin Chen"
+          ],
+          "teaches": "Where the idea went next",
+          "why_here": "Builds on the anchor paper and is itself widely cited, so it is the natural continuation once the anchor is understood."
+        },
+        {
+          "position": 8,
+          "stage": "followup",
+          "year": 2021,
+          "title": "A Survey of Convolutional Neural Networks: Analysis, Applications, and Prospects",
+          "authors": [
+            "Zewen Li",
+            "Fan Liu",
+            "Wenjie Yang"
+          ],
+          "teaches": "Where the idea went next",
+          "why_here": "Builds on the anchor paper and is itself widely cited, so it is the natural continuation once the anchor is understood."
+        },
+        {
+          "position": 9,
+          "stage": "followup",
+          "year": 2015,
+          "title": "Deep Residual Learning for Image Recognition",
+          "authors": [
+            "He, Kaiming",
+            "Xiangyu Zhang",
+            "Shaoqing Ren"
+          ],
+          "teaches": "Where the idea went next",
+          "why_here": "Builds on the anchor paper and is itself widely cited, so it is the natural continuation once the anchor is understood."
+        }
+      ],
+      "error": null
+    },
+    {
+      "topic": "transformers",
+      "seconds": 89.48919845899218,
+      "step_count": 9,
+      "degraded": false,
+      "notes": [
+        "9 steps: 4 prerequisite, 1 anchor, 4 follow-up. Planned by deepseek-v4-pro:cloud."
+      ],
+      "stages_run": [
+        "strategy:anchor"
+      ],
+      "steps": [
+        {
+          "position": 1,
+          "stage": "prerequisite",
+          "year": 2025,
+          "title": "Attention Is All You Need",
+          "authors": [
+            "Ashish Vaswani",
+            "Noam Shazeer",
+            "Niki Parmar"
+          ],
+          "teaches": "The Transformer architecture and self-attention mechanism, including multi-head attention and positional encodings.",
+          "why_here": "The target paper builds a video model entirely from self-attention, so the reader must first understand the core Transformer design."
+        },
+        {
+          "position": 2,
+          "stage": "prerequisite",
+          "year": 2020,
+          "title": "An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale",
+          "authors": [
+            "Alexey Dosovitskiy",
+            "Lucas Beyer",
+            "Alexander Kolesnikov"
+          ],
+          "teaches": "Vision Transformer (ViT): how to apply a Transformer to images by splitting them into patches and treating them as tokens.",
+          "why_here": "The target paper adapts ViT to video by treating spatiotemporal patches as tokens, so understanding ViT is essential."
+        },
+        {
+          "position": 3,
+          "stage": "prerequisite",
+          "year": 2018,
+          "title": "Non-local Neural Networks",
+          "authors": [
+            "Xiaolong Wang",
+            "Ross Girshick",
+            "Abhinav Gupta"
+          ],
+          "teaches": "Non-local neural networks: using self-attention to capture long-range dependencies in video, as an alternative to 3D convolutions.",
+          "why_here": "The target paper contrasts its pure attention approach with prior non-local blocks that augment CNNs, so this reference clarifies the baseline the target improves upon."
+        },
+        {
+          "position": 4,
+          "stage": "prerequisite",
+          "year": 2019,
+          "title": "Axial Attention in Multidimensional Transformers",
+          "authors": [
+            "Jonathan Ho",
+            "Nal Kalchbrenner",
+            "Dirk Weissenborn"
+          ],
+          "teaches": "Axial attention: applying attention along separate axes of a tensor to reduce computational cost while capturing global dependencies.",
+          "why_here": "The target paper's divided space-time attention applies temporal and spatial attention separately, which is a form of axial attention; understanding this concept explains the key design choice."
+        },
+        {
+          "position": 5,
+          "stage": "anchor",
+          "year": 2021,
+          "title": "Is Space-Time Attention All You Need for Video Understanding?",
+          "authors": [
+            "Gedas Bertasius",
+            "Heng Wang",
+            "Lorenzo Torresani"
+          ],
+          "teaches": "transformers itself",
+          "why_here": "The paper that introduced the topic you asked about \u2014 everything before this exists to make it readable."
+        },
+        {
+          "position": 6,
+          "stage": "followup",
+          "year": 2022,
+          "title": "Video Swin Transformer",
+          "authors": [
+            "Ze Liu",
+            "Ning Jia",
+            "Yue Cao"
+          ],
+          "teaches": "Where the idea went next",
+          "why_here": "Builds on the anchor paper and is itself widely cited, so it is the natural continuation once the anchor is understood."
+        },
+        {
+          "position": 7,
+          "stage": "followup",
+          "year": 2022,
+          "title": "MViTv2: Improved Multiscale Vision Transformers for Classification and Detection",
+          "authors": [
+            "Yanghao Li",
+            "Chao-Yuan Wu",
+            "Haoqi Fan"
+          ],
+          "teaches": "Where the idea went next",
+          "why_here": "Builds on the anchor paper and is itself widely cited, so it is the natural continuation once the anchor is understood."
+        },
+        {
+          "position": 8,
+          "stage": "followup",
+          "year": 2022,
+          "title": "Human Action Recognition From Various Data Modalities: A Review",
+          "authors": [
+            "Zehua Sun",
+            "Qiuhong Ke",
+            "Hossein Rahmani"
+          ],
+          "teaches": "Where the idea went next",
+          "why_here": "Builds on the anchor paper and is itself widely cited, so it is the natural continuation once the anchor is understood."
+        },
+        {
+          "position": 9,
+          "stage": "followup",
+          "year": 2023,
+          "title": "UniFormer: Unifying Convolution and Self-Attention for Visual Recognition",
+          "authors": [
+            "Kunchang Li",
+            "Yali Wang",
+            "Junhao Zhang"
+          ],
+          "teaches": "Where the idea went next",
+          "why_here": "Builds on the anchor paper and is itself widely cited, so it is the natural continuation once the anchor is understood."
+        }
+      ],
+      "error": null
+    },
+    {
+      "topic": "diffusion models",
+      "seconds": 100.12355600000592,
+      "step_count": 9,
+      "degraded": false,
+      "notes": [
+        "9 steps: 4 prerequisite, 1 anchor, 4 follow-up. Planned by deepseek-v4-pro:cloud."
+      ],
+      "stages_run": [
+        "strategy:anchor"
+      ],
+      "steps": [
+        {
+          "position": 1,
+          "stage": "prerequisite",
+          "year": 2011,
+          "title": "A Connection Between Score Matching and Denoising Autoencoders",
+          "authors": [
+            "Pascal Vincent"
+          ],
+          "teaches": "Equivalence between score matching and training denoising autoencoders, introducing denoising score matching.",
+          "why_here": "The target paper's simplified training objective is a form of denoising score matching; understanding this equivalence is necessary to see why the loss works."
+        },
+        {
+          "position": 2,
+          "stage": "prerequisite",
+          "year": 2024,
+          "title": "Deep unsupervised learning using nonequilibrium thermodynamics",
+          "authors": [
+            "Jascha Sohl\u2010Dickstein"
+          ],
+          "teaches": "Diffusion probabilistic models: defining a forward diffusion process that gradually destroys data and learning a reverse process to generate data, trained via variational inference.",
+          "why_here": "The target paper directly builds on this framework, extending it with a simplified loss and improved architecture; without it, the core idea of diffusion models is missing."
+        },
+        {
+          "position": 3,
+          "stage": "prerequisite",
+          "year": 2019,
+          "title": "Generative Modeling by Estimating Gradients of the Data Distribution",
+          "authors": [
+            "Yang Song",
+            "Stefano Ermon"
+          ],
+          "teaches": "Score-based generative modeling using multiple noise levels and annealed Langevin dynamics, estimating score functions with denoising score matching.",
+          "why_here": "The target paper connects its diffusion model to score-based models and uses similar multi-scale noise; this reference clarifies the score perspective and sampling procedure."
+        },
+        {
+          "position": 4,
+          "stage": "prerequisite",
+          "year": 2015,
+          "title": "U-Net: Convolutional Networks for Biomedical Image Segmentation",
+          "authors": [
+            "Olaf Ronneberger",
+            "Philipp Fischer",
+            "Thomas Brox"
+          ],
+          "teaches": "U-Net architecture: an encoder-decoder with skip connections for dense prediction, widely used for image-to-image tasks.",
+          "why_here": "The target paper uses a modified U-Net as the neural network for the reverse diffusion process; without knowing U-Net, the architecture details are opaque."
+        },
+        {
+          "position": 5,
+          "stage": "anchor",
+          "year": 2020,
+          "title": "Denoising Diffusion Probabilistic Models",
+          "authors": [
+            "Ho, Jonathan",
+            "Ajay N. Jain",
+            "Pieter Abbeel"
+          ],
+          "teaches": "diffusion models itself",
+          "why_here": "The paper that introduced the topic you asked about \u2014 everything before this exists to make it readable."
+        },
+        {
+          "position": 6,
+          "stage": "followup",
+          "year": 2022,
+          "title": "High-Resolution Image Synthesis with Latent Diffusion Models",
+          "authors": [
+            "Robin Rombach",
+            "Andreas Blattmann",
+            "Dominik Lorenz"
+          ],
+          "teaches": "Where the idea went next",
+          "why_here": "Builds on the anchor paper and is itself widely cited, so it is the natural continuation once the anchor is understood."
+        },
+        {
+          "position": 7,
+          "stage": "followup",
+          "year": 2021,
+          "title": "Diffusion Models Beat GANs on Image Synthesis",
+          "authors": [
+            "Prafulla Dhariwal",
+            "Alex Nichol"
+          ],
+          "teaches": "Where the idea went next",
+          "why_here": "Builds on the anchor paper and is itself widely cited, so it is the natural continuation once the anchor is understood."
+        },
+        {
+          "position": 8,
+          "stage": "followup",
+          "year": 2023,
+          "title": "DreamBooth: Fine Tuning Text-to-Image Diffusion Models for Subject-Driven Generation",
+          "authors": [
+            "Nataniel Ruiz",
+            "Yuanzhen Li",
+            "Varun Jampani"
+          ],
+          "teaches": "Where the idea went next",
+          "why_here": "Builds on the anchor paper and is itself widely cited, so it is the natural continuation once the anchor is understood."
+        },
+        {
+          "position": 9,
+          "stage": "followup",
+          "year": 2023,
+          "title": "Diffusion Models in Vision: A Survey",
+          "authors": [
+            "Florinel-Alin Croitoru",
+            "Vlad Hondru",
+            "Radu Tudor Ionescu"
+          ],
+          "teaches": "Where the idea went next",
+          "why_here": "Builds on the anchor paper and is itself widely cited, so it is the natural continuation once the anchor is understood."
+        }
+      ],
+      "error": null
+    },
+    {
+      "topic": "generative adversarial networks",
+      "seconds": 80.3702862499922,
+      "step_count": 9,
+      "degraded": false,
+      "notes": [
+        "9 steps: 1 prerequisite, 1 anchor, 7 follow-up. Planned by deepseek-v4-pro:cloud."
+      ],
+      "stages_run": [
+        "strategy:anchor"
+      ],
+      "steps": [
+        {
+          "position": 1,
+          "stage": "prerequisite",
+          "year": 2017,
+          "title": "GAN\uff08Generative Adversarial Nets\uff09",
+          "authors": [
+            "\u67f4\u7530 \u6df3\u53f8"
+          ],
+          "teaches": "adversarial training framework for generative models",
+          "why_here": "the target paper extends GANs to conditional setting; understanding the base GAN is necessary to follow the conditional modification"
+        },
+        {
+          "position": 2,
+          "stage": "anchor",
+          "year": 2014,
+          "title": "Conditional Generative Adversarial Nets",
+          "authors": [
+            "Mehdi Mirza",
+            "Simon Osindero"
+          ],
+          "teaches": "generative adversarial networks itself",
+          "why_here": "The paper that introduced the topic you asked about \u2014 everything before this exists to make it readable."
+        },
+        {
+          "position": 3,
+          "stage": "followup",
+          "year": 2017,
+          "title": "Least Squares Generative Adversarial Networks",
+          "authors": [
+            "Xudong Mao",
+            "Qing Li",
+            "Haoran Xie"
+          ],
+          "teaches": "Where the idea went next",
+          "why_here": "Builds on the anchor paper and is itself widely cited, so it is the natural continuation once the anchor is understood."
+        },
+        {
+          "position": 4,
+          "stage": "followup",
+          "year": 2017,
+          "title": "Adversarial Discriminative Domain Adaptation",
+          "authors": [
+            "Eric Tzeng",
+            "Judy Hoffman",
+            "Kate Saenko"
+          ],
+          "teaches": "Where the idea went next",
+          "why_here": "Builds on the anchor paper and is itself widely cited, so it is the natural continuation once the anchor is understood."
+        },
+        {
+          "position": 5,
+          "stage": "followup",
+          "year": 2018,
+          "title": "Generative Adversarial Networks: An Overview",
+          "authors": [
+            "Antonia Creswell",
+            "Tom White",
+            "Vincent Dumoulin"
+          ],
+          "teaches": "Where the idea went next",
+          "why_here": "Builds on the anchor paper and is itself widely cited, so it is the natural continuation once the anchor is understood."
+        },
+        {
+          "position": 6,
+          "stage": "followup",
+          "year": 2018,
+          "title": "High-Resolution Image Synthesis and Semantic Manipulation with Conditional GANs",
+          "authors": [
+            "Ting-Chun Wang",
+            "Ming-Yu Liu",
+            "Jun-Yan Zhu"
+          ],
+          "teaches": "Where the idea went next",
+          "why_here": "Builds on the anchor paper and is itself widely cited, so it is the natural continuation once the anchor is understood."
+        },
+        {
+          "position": 7,
+          "stage": "followup",
+          "year": 2018,
+          "title": "Spectral Normalization for Generative Adversarial Networks",
+          "authors": [
+            "Takeru Miyato",
+            "Toshiki Kataoka",
+            "Masanori Koyama"
+          ],
+          "teaches": "Where the idea went next",
+          "why_here": "Builds on the anchor paper and is itself widely cited, so it is the natural continuation once the anchor is understood."
+        },
+        {
+          "position": 8,
+          "stage": "followup",
+          "year": 2017,
+          "title": "DualGAN: Unsupervised Dual Learning for Image-to-Image Translation",
+          "authors": [
+            "Zili Yi",
+            "Hao Zhang",
+            "Ping Tan"
+          ],
+          "teaches": "Where the idea went next",
+          "why_here": "Builds on the anchor paper and is itself widely cited, so it is the natural continuation once the anchor is understood."
+        },
+        {
+          "position": 9,
+          "stage": "followup",
+          "year": 2016,
+          "title": "Conditional Image Synthesis With Auxiliary Classifier GANs",
+          "authors": [
+            "Augustus Odena",
+            "Christopher Olah",
+            "Jonathon Shlens"
+          ],
+          "teaches": "Where the idea went next",
+          "why_here": "Builds on the anchor paper and is itself widely cited, so it is the natural continuation once the anchor is understood."
+        }
+      ],
+      "error": null
+    },
+    {
+      "topic": "word embeddings",
+      "seconds": 38.76638104200538,
+      "step_count": 9,
+      "degraded": false,
+      "notes": [
+        "Anchor 'Efficient Estimation of Word Representations in Vector Space' resolved, but no provider returned its reference list, so prerequisites could not be derived from it.",
+        "9 steps: 0 prerequisite, 1 anchor, 8 follow-up. Planned by deepseek-v4-pro:cloud."
+      ],
+      "stages_run": [
+        "strategy:anchor"
+      ],
+      "steps": [
+        {
+          "position": 1,
+          "stage": "anchor",
+          "year": 2013,
+          "title": "Efficient Estimation of Word Representations in Vector Space",
+          "authors": [
+            "Tom\u00e1\u0161 Mikolov",
+            "Kai Chen",
+            "Greg S. Corrado"
+          ],
+          "teaches": "word embeddings itself",
+          "why_here": "The paper that introduced the topic you asked about \u2014 everything before this exists to make it readable."
+        },
+        {
+          "position": 2,
+          "stage": "followup",
+          "year": 2016,
+          "title": "Convolutional Neural Networks On Graphs With Fast Localized Spectral Filtering (Gdl Seminar)",
+          "authors": [
+            "Micha\u00ebl Defferrard"
+          ],
+          "teaches": "Where the idea went next",
+          "why_here": "Builds on the anchor paper and is itself widely cited, so it is the natural continuation once the anchor is understood."
+        },
+        {
+          "position": 3,
+          "stage": "followup",
+          "year": 2016,
+          "title": "Neural Architectures for Named Entity Recognition",
+          "authors": [
+            "Guillaume Lample",
+            "Miguel Ballesteros",
+            "Sandeep Subramanian"
+          ],
+          "teaches": "Where the idea went next",
+          "why_here": "Builds on the anchor paper and is itself widely cited, so it is the natural continuation once the anchor is understood."
+        },
+        {
+          "position": 4,
+          "stage": "followup",
+          "year": 2015,
+          "title": "Learning Entity and Relation Embeddings for Knowledge Graph Completion",
+          "authors": [
+            "Yankai Lin",
+            "Zhiyuan Liu",
+            "Maosong Sun"
+          ],
+          "teaches": "Where the idea went next",
+          "why_here": "Builds on the anchor paper and is itself widely cited, so it is the natural continuation once the anchor is understood."
+        },
+        {
+          "position": 5,
+          "stage": "followup",
+          "year": 2017,
+          "title": "Semantics derived automatically from language corpora contain human-like biases",
+          "authors": [
+            "Aylin Caliskan",
+            "Joanna J. Bryson",
+            "Arvind Narayanan"
+          ],
+          "teaches": "Where the idea went next",
+          "why_here": "Builds on the anchor paper and is itself widely cited, so it is the natural continuation once the anchor is understood."
+        },
+        {
+          "position": 6,
+          "stage": "followup",
+          "year": 2017,
+          "title": "ConceptNet 5.5: An Open Multilingual Graph of General Knowledge",
+          "authors": [
+            "Robert E. Speer",
+            "Joshua Chin",
+            "Catherine Havasi"
+          ],
+          "teaches": "Where the idea went next",
+          "why_here": "Builds on the anchor paper and is itself widely cited, so it is the natural continuation once the anchor is understood."
+        },
+        {
+          "position": 7,
+          "stage": "followup",
+          "year": 2018,
+          "title": "Deep learning for sentiment analysis: A survey",
+          "authors": [
+            "Lei Zhang",
+            "Shuai Wang",
+            "Bing Liu"
+          ],
+          "teaches": "Where the idea went next",
+          "why_here": "Builds on the anchor paper and is itself widely cited, so it is the natural continuation once the anchor is understood."
+        },
+        {
+          "position": 8,
+          "stage": "followup",
+          "year": 2021,
+          "title": "Knowledge Graphs",
+          "authors": [
+            "Aidan Hogan",
+            "Eva Blomqvist",
+            "Michael Cochez"
+          ],
+          "teaches": "Where the idea went next",
+          "why_here": "Builds on the anchor paper and is itself widely cited, so it is the natural continuation once the anchor is understood."
+        },
+        {
+          "position": 9,
+          "stage": "followup",
+          "year": 2014,
+          "title": "Neural Word Embedding as Implicit Matrix Factorization",
+          "authors": [
+            "Omer Levy",
+            "Yoav Goldberg"
+          ],
+          "teaches": "Where the idea went next",
+          "why_here": "Builds on the anchor paper and is itself widely cited, so it is the natural continuation once the anchor is understood."
+        }
+      ],
+      "error": null
+    },
+    {
+      "topic": "convolutional neural networks",
+      "seconds": 67.38595008300035,
+      "step_count": 5,
+      "degraded": false,
+      "notes": [
+        "5 steps: 4 prerequisite, 1 anchor, 0 follow-up. Planned by deepseek-v4-pro:cloud."
+      ],
+      "stages_run": [
+        "strategy:anchor"
+      ],
+      "steps": [
+        {
+          "position": 1,
+          "stage": "prerequisite",
+          "year": 1989,
+          "title": "Handwritten Digit Recognition with a Back-Propagation Network",
+          "authors": [
+            "Yann LeCun",
+            "Bernhard E. Boser",
+            "John S. Denker"
+          ],
+          "teaches": "Convolutional neural networks and backpropagation applied to image recognition, establishing the basic architecture of convolutional layers, pooling, and fully connected layers.",
+          "why_here": "The target paper builds upon this foundational CNN architecture; without it, the learner cannot understand the convolutional and pooling operations that are central to the model."
+        },
+        {
+          "position": 2,
+          "stage": "prerequisite",
+          "year": 2010,
+          "title": "Convolutional networks and applications in vision",
+          "authors": [
+            "Yann LeCun",
+            "Koray Kavukcuoglu",
+            "Cl\u00e9ment Farabet"
+          ],
+          "teaches": "A comprehensive overview of convolutional networks, their components, and applications in vision, including invariance and feature learning.",
+          "why_here": "The target paper assumes familiarity with CNN design choices and terminology; this review provides the necessary background to follow the architecture and training discussion."
+        },
+        {
+          "position": 3,
+          "stage": "prerequisite",
+          "year": 2010,
+          "title": "Rectified Linear Units Improve Restricted Boltzmann Machines",
+          "authors": [
+            "Vinod Nair",
+            "Geoffrey E. Hinton"
+          ],
+          "teaches": "Rectified linear units (ReLUs) as activation functions that improve training of neural networks.",
+          "why_here": "The target paper uses ReLUs as a key component and claims they accelerate training; understanding ReLUs is necessary to grasp this design choice and its impact."
+        },
+        {
+          "position": 4,
+          "stage": "prerequisite",
+          "year": 2012,
+          "title": "Improving neural networks by preventing co-adaptation of feature detectors",
+          "authors": [
+            "Geoffrey E. Hinton",
+            "Nitish Srivastava",
+            "Alex Krizhevsky"
+          ],
+          "teaches": "Dropout as a regularization technique that prevents co-adaptation of feature detectors by randomly omitting units during training.",
+          "why_here": "The target paper employs dropout to reduce overfitting; without this background, the learner cannot understand why dropout is used and how it works."
+        },
+        {
+          "position": 5,
+          "stage": "anchor",
+          "year": 2017,
+          "title": "ImageNet classification with deep convolutional neural networks",
+          "authors": [
+            "Alex Krizhevsky",
+            "Ilya Sutskever",
+            "Geoffrey E. Hinton"
+          ],
+          "teaches": "convolutional neural networks itself",
+          "why_here": "The paper that introduced the topic you asked about \u2014 everything before this exists to make it readable."
+        }
+      ],
+      "error": null
+    },
+    {
+      "topic": "reinforcement learning from human feedback",
+      "seconds": 31.180752208005288,
+      "step_count": 0,
+      "degraded": true,
+      "notes": [
+        "Proposed anchor 'Deep reinforcement learning from human preferences' did not resolve to a real paper and was discarded.",
+        "No anchor paper for this topic could be identified and resolved, so the path has no target to build towards.",
+        "Strategy 'anchor' produced no usable steps."
+      ],
+      "stages_run": [
+        "strategy:anchor"
+      ],
+      "steps": [],
+      "error": null
+    },
+    {
+      "topic": "regularization in machine learning",
+      "seconds": 81.10961591699743,
+      "step_count": 6,
+      "degraded": false,
+      "notes": [
+        "6 steps: 4 prerequisite, 2 anchor, 0 follow-up. Planned by deepseek-v4-pro:cloud."
+      ],
+      "stages_run": [
+        "strategy:anchor"
+      ],
+      "steps": [
+        {
+          "position": 1,
+          "stage": "prerequisite",
+          "year": 1963,
+          "title": "The Logic of Least Squares",
+          "authors": [
+            "G. A. Barnard"
+          ],
+          "teaches": "Foundations of least squares estimation, including mean square error and unbiasedness.",
+          "why_here": "The target paper contrasts ridge regression with ordinary least squares; without understanding least squares logic, the bias-variance tradeoff and motivation for biased estimation are unclear."
+        },
+        {
+          "position": 2,
+          "stage": "prerequisite",
+          "year": 1955,
+          "title": "Solving systems of linear equations with a positive definite, symmetric, but possibly ill-conditioned matrix",
+          "authors": [
+            "James D. Riley"
+          ],
+          "teaches": "Numerical difficulties in solving ill-conditioned positive definite linear systems, such as those arising from nonorthogonal predictors.",
+          "why_here": "Ridge regression adds a constant to the diagonal of X'X to improve conditioning; this reference explains why ill-conditioning makes least squares estimates unstable."
+        },
+        {
+          "position": 3,
+          "stage": "prerequisite",
+          "year": 1962,
+          "title": "Applied Statistical Decision Theory.",
+          "authors": [
+            "Harry V. Roberts",
+            "Howard Raiffa",
+            "Robert Schlaifer"
+          ],
+          "teaches": "Decision-theoretic framework for estimation, including loss functions and Bayes rules.",
+          "why_here": "The target paper evaluates estimators by mean squared error and advocates biased estimation; decision theory provides the formal basis for comparing biased and unbiased estimators."
+        },
+        {
+          "position": 4,
+          "stage": "prerequisite",
+          "year": 1962,
+          "title": "Confidence Sets for the Mean of a Multivariate Normal Distribution",
+          "authors": [
+            "C. Stein"
+          ],
+          "teaches": "Inadmissibility of the sample mean in high dimensions and improved confidence sets via shrinkage.",
+          "why_here": "This is a key theoretical result showing that biased (shrinkage) estimators can dominate unbiased ones, directly motivating ridge regression's biased approach."
+        },
+        {
+          "position": 5,
+          "stage": "anchor",
+          "year": 1970,
+          "title": "Ridge Regression: Biased Estimation for Nonorthogonal Problems",
+          "authors": [
+            "Arthur E. Hoerl",
+            "Robert W. Kennard"
+          ],
+          "teaches": "regularization in machine learning itself",
+          "why_here": "The paper that introduced the topic you asked about \u2014 everything before this exists to make it readable."
+        },
+        {
+          "position": 6,
+          "stage": "anchor",
+          "year": 1996,
+          "title": "Regression Shrinkage and Selection Via the Lasso",
+          "authors": [
+            "Robert Tibshirani"
+          ],
+          "teaches": "regularization in machine learning itself",
+          "why_here": "The paper that introduced the topic you asked about \u2014 everything before this exists to make it readable."
+        }
+      ],
+      "error": null
+    },
+    {
+      "topic": "contrastive learning",
+      "seconds": 29.950327874990762,
+      "step_count": 0,
+      "degraded": true,
+      "notes": [
+        "Proposed anchor 'A Simple Framework for Contrastive Learning of Visual Representations' did not resolve to a real paper and was discarded.",
+        "No anchor paper for this topic could be identified and resolved, so the path has no target to build towards.",
+        "Strategy 'anchor' produced no usable steps."
+      ],
+      "stages_run": [
+        "strategy:anchor"
+      ],
+      "steps": [],
+      "error": null
+    }
+  ]
+}

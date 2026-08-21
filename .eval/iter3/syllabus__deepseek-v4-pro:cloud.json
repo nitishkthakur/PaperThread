@@ -1,0 +1,458 @@
+{
+  "strategy": "syllabus",
+  "model": "deepseek-v4-pro:cloud",
+  "runs": [
+    {
+      "topic": "dropout in neural networks",
+      "seconds": 15.055911874995218,
+      "step_count": 7,
+      "degraded": true,
+      "confidence": 0.4,
+      "confidence_reasons": [
+        "never reaches the topic itself (no anchor paper)",
+        "part of the plan could not be found and was dropped"
+      ],
+      "notes": [
+        "INCOMPLETE: this path never reaches the topic itself. The paper that would be the destination could not be identified or could not be found, so what follows is background only. Treat it as a partial result.",
+        "2 planned step(s) named a paper that could not be found and were dropped rather than substituted: 'A Simple Weight Decay Can Improve Generalization'; 'Dropout: A Simple Way to Prevent Neural Networks from Overfitting'",
+        "7 steps: 3 prerequisite, 0 anchor, 4 follow-up. Planned by deepseek-v4-pro:cloud."
+      ],
+      "stages_run": [
+        "strategy:syllabus"
+      ],
+      "steps": [
+        {
+          "position": 1,
+          "stage": "prerequisite",
+          "year": 1986,
+          "title": "Learning representations by back-propagating errors",
+          "authors": [
+            "David E. Rumelhart",
+            "Geoffrey E. Hinton",
+            "Ronald J. Williams"
+          ],
+          "teaches": "Fundamentals of training neural networks using backpropagation",
+          "why_here": "Establishes the basic training procedure for neural networks, which all later regularization methods modify."
+        },
+        {
+          "position": 2,
+          "stage": "prerequisite",
+          "year": 1996,
+          "title": "Bagging predictors",
+          "authors": [
+            "Leo Breiman"
+          ],
+          "teaches": "Ensemble averaging of multiple models to reduce variance",
+          "why_here": "Dropout is motivated by model averaging; understanding bagging provides the ensemble perspective needed to see dropout as an implicit ensemble."
+        },
+        {
+          "position": 3,
+          "stage": "prerequisite",
+          "year": 2008,
+          "title": "Extracting and composing robust features with denoising autoencoders",
+          "authors": [
+            "Pascal Vincent",
+            "Hugo Larochelle",
+            "Yoshua Bengio"
+          ],
+          "teaches": "Injecting noise into inputs to learn robust features",
+          "why_here": "Shows that stochastic corruption during training can improve generalization, a direct precursor to dropout's random omission of hidden units."
+        },
+        {
+          "position": 4,
+          "stage": "followup",
+          "year": 2013,
+          "title": "Understanding Dropout: Training Multi-Layer Perceptrons with Auxiliary Independent Stochastic Neurons",
+          "authors": [
+            "Kyunghyun Cho"
+          ],
+          "teaches": "Theoretical analysis of dropout as ensemble averaging and adaptive regularization",
+          "why_here": "Provides a formal analysis of why dropout works, connecting it to the ensemble and regularization ideas from the prerequisites."
+        },
+        {
+          "position": 5,
+          "stage": "followup",
+          "year": 2015,
+          "title": "Dropout as a Bayesian Approximation: Representing Model Uncertainty in Deep Learning",
+          "authors": [
+            "Yarin Gal",
+            "Zoubin Ghahramani"
+          ],
+          "teaches": "Dropout as approximate Bayesian inference for uncertainty estimation",
+          "why_here": "Extends dropout to quantify model uncertainty, a major application beyond regularization."
+        },
+        {
+          "position": 6,
+          "stage": "followup",
+          "year": 2015,
+          "title": "A Theoretically Grounded Application of Dropout in Recurrent Neural Networks",
+          "authors": [
+            "Yarin Gal",
+            "Zoubin Ghahramani"
+          ],
+          "teaches": "Applying dropout to recurrent neural networks with theoretical grounding",
+          "why_here": "Shows how to correctly use dropout in RNNs, addressing a limitation of the original method."
+        },
+        {
+          "position": 7,
+          "stage": "followup",
+          "year": 2017,
+          "title": "Concrete Dropout",
+          "authors": [
+            "Yarin Gal",
+            "Jiri Hron",
+            "Alex Kendall"
+          ],
+          "teaches": "Automatic tuning of dropout rates via continuous relaxation",
+          "why_here": "Improves dropout by learning per-layer dropout rates, reducing the need for manual tuning."
+        }
+      ],
+      "error": null
+    },
+    {
+      "topic": "contrastive learning",
+      "seconds": 15.00949633399432,
+      "step_count": 8,
+      "degraded": false,
+      "confidence": 0.85,
+      "confidence_reasons": [
+        "part of the plan could not be found and was dropped"
+      ],
+      "notes": [
+        "1 planned step(s) named a paper that could not be found and were dropped rather than substituted: 'Noise-contrastive estimation: A new estimation principle for unnormali'",
+        "8 steps: 3 prerequisite, 1 anchor, 4 follow-up. Planned by deepseek-v4-pro:cloud."
+      ],
+      "stages_run": [
+        "strategy:syllabus"
+      ],
+      "steps": [
+        {
+          "position": 1,
+          "stage": "prerequisite",
+          "year": 1993,
+          "title": "SIGNATURE VERIFICATION USING A \u201cSIAMESE\u201d TIME DELAY NEURAL NETWORK",
+          "authors": [
+            "JANE BROMLEY",
+            "JAMES W. BENTZ",
+            "L\u00c9ON BOTTOU"
+          ],
+          "teaches": "Learning a similarity function between pairs of inputs using a shared neural network.",
+          "why_here": "Introduces the siamese architecture, the foundational idea of comparing pairs to learn representations, which contrastive learning builds upon."
+        },
+        {
+          "position": 2,
+          "stage": "prerequisite",
+          "year": null,
+          "title": "Dimensionality Reduction by Learning an Invariant Mapping",
+          "authors": [
+            "R. Hadsell",
+            "S. Chopra",
+            "Y. LeCun"
+          ],
+          "teaches": "A loss function that pulls embeddings of similar pairs together and pushes dissimilar pairs apart.",
+          "why_here": "Defines the contrastive loss, directly preceding modern contrastive learning by formalizing the push-pull objective."
+        },
+        {
+          "position": 3,
+          "stage": "prerequisite",
+          "year": 2013,
+          "title": "Distributed Representations of Words and Phrases and their Compositionality",
+          "authors": [
+            "Tomas Mikolov",
+            "Ilya Sutskever",
+            "Kai Chen"
+          ],
+          "teaches": "Learning word embeddings efficiently using negative sampling, a form of contrastive estimation.",
+          "why_here": "Shows how contrastive ideas scale to large representation learning, influencing later self-supervised visual methods."
+        },
+        {
+          "position": 4,
+          "stage": "anchor",
+          "year": 2020,
+          "title": "A Simple Framework for Contrastive Learning of Visual Representations",
+          "authors": [
+            "Ting Chen",
+            "Simon Kornblith",
+            "Mohammad Norouzi"
+          ],
+          "teaches": "A simple framework for contrastive learning of visual representations using data augmentation, a projection head, and large batch training.",
+          "why_here": "The anchor paper that popularized contrastive learning in computer vision, synthesizing the prerequisite ideas into a highly effective method."
+        },
+        {
+          "position": 5,
+          "stage": "followup",
+          "year": 2020,
+          "title": "Understanding Contrastive Representation Learning through Alignment and Uniformity on the Hypersphere",
+          "authors": [
+            "Tongzhou Wang",
+            "Phillip Isola"
+          ],
+          "teaches": "Theoretical analysis showing contrastive learning optimizes alignment of positive pairs and uniformity of the representation distribution.",
+          "why_here": "Provides a principled understanding of why the anchor method works, immediately following it."
+        },
+        {
+          "position": 6,
+          "stage": "followup",
+          "year": 2020,
+          "title": "Bootstrap your own latent: A new approach to self-supervised Learning",
+          "authors": [
+            "Jean-Bastien Grill",
+            "Florian Strub",
+            "Florent Altch\u00e9"
+          ],
+          "teaches": "A self-supervised method that removes negative pairs by using a momentum encoder and a predictor, achieving strong results.",
+          "why_here": "Challenges a core assumption of the anchor (need for negatives), representing a major extension of contrastive learning."
+        },
+        {
+          "position": 7,
+          "stage": "followup",
+          "year": 2020,
+          "title": "Supervised Contrastive Learning",
+          "authors": [
+            "Prannay Khosla",
+            "Piotr Teterwak",
+            "Chen Wang"
+          ],
+          "teaches": "Extending contrastive learning to supervised settings by leveraging label information to define positive sets.",
+          "why_here": "Shows how the contrastive framework can be adapted beyond self-supervision, building on the anchor."
+        },
+        {
+          "position": 8,
+          "stage": "followup",
+          "year": 2020,
+          "title": "What Makes for Good Views for Contrastive Learning?",
+          "authors": [
+            "Yonglong Tian",
+            "Chen Sun",
+            "Ben Poole"
+          ],
+          "teaches": "Analysis of the role of data augmentation in contrastive learning, showing that view selection is crucial for performance.",
+          "why_here": "Provides practical insights into a key component of the anchor method, rounding out the sequence with a focus on implementation details."
+        }
+      ],
+      "error": null
+    },
+    {
+      "topic": "transformers",
+      "seconds": 15.509352167006,
+      "step_count": 7,
+      "degraded": false,
+      "confidence": 1.0,
+      "confidence_reasons": [
+        "reaches the topic, with prerequisites, all steps verified"
+      ],
+      "notes": [
+        "7 steps: 3 prerequisite, 1 anchor, 3 follow-up. Planned by deepseek-v4-pro:cloud."
+      ],
+      "stages_run": [
+        "strategy:syllabus"
+      ],
+      "steps": [
+        {
+          "position": 1,
+          "stage": "prerequisite",
+          "year": 2014,
+          "title": "Sequence to Sequence Learning with Neural Networks",
+          "authors": [
+            "Ilya Sutskever",
+            "Oriol Vinyals",
+            "Quoc V. Le"
+          ],
+          "teaches": "Sequence-to-sequence learning with recurrent neural networks, where an encoder compresses the input into a fixed vector and a decoder generates the output.",
+          "why_here": "Introduces the encoder-decoder framework for sequence transduction, which the Transformer later replaces the recurrent components of."
+        },
+        {
+          "position": 2,
+          "stage": "prerequisite",
+          "year": 2014,
+          "title": "Neural Machine Translation by Jointly Learning to Align and Translate",
+          "authors": [
+            "Dzmitry Bahdanau",
+            "Kyunghyun Cho",
+            "Yoshua Bengio"
+          ],
+          "teaches": "Attention mechanism that allows the decoder to focus on relevant parts of the input sequence, avoiding the fixed-vector bottleneck.",
+          "why_here": "Introduces attention, the core idea that the Transformer extends to self-attention across the entire sequence."
+        },
+        {
+          "position": 3,
+          "stage": "prerequisite",
+          "year": 2017,
+          "title": "Convolutional Sequence to Sequence Learning",
+          "authors": [
+            "Jonas Gehring",
+            "Michael Auli",
+            "David Grangier"
+          ],
+          "teaches": "Non-recurrent sequence modeling using convolutional networks and positional embeddings, showing that recurrence is not necessary for sequence tasks.",
+          "why_here": "Demonstrates a fully parallelizable sequence model with positional information, directly motivating the Transformer's design."
+        },
+        {
+          "position": 4,
+          "stage": "anchor",
+          "year": 2025,
+          "title": "Attention Is All You Need",
+          "authors": [
+            "Ashish Vaswani",
+            "Noam Shazeer",
+            "Niki Parmar"
+          ],
+          "teaches": "The Transformer architecture: multi-head self-attention, positional encoding, and feed-forward layers, entirely without recurrence or convolution.",
+          "why_here": "This is the paper that defines the Transformer, the topic the learner asked about."
+        },
+        {
+          "position": 5,
+          "stage": "followup",
+          "year": 2018,
+          "title": "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding",
+          "authors": [
+            "Jacob Devlin",
+            "Ming-Wei Chang",
+            "Kenton Lee"
+          ],
+          "teaches": "Pre-training a deep bidirectional Transformer on large text corpora and fine-tuning for downstream tasks, establishing the dominant NLP paradigm.",
+          "why_here": "Shows how the Transformer encoder can be pre-trained to capture rich contextual representations, leading to state-of-the-art results across NLP."
+        },
+        {
+          "position": 6,
+          "stage": "followup",
+          "year": 2020,
+          "title": "An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale",
+          "authors": [
+            "Alexey Dosovitskiy",
+            "Lucas Beyer",
+            "Alexander Kolesnikov"
+          ],
+          "teaches": "Applying a pure Transformer encoder to image patches, demonstrating that the architecture generalizes beyond text to vision.",
+          "why_here": "Extends the Transformer to computer vision, proving its versatility and sparking the ViT line of research."
+        },
+        {
+          "position": 7,
+          "stage": "followup",
+          "year": 2019,
+          "title": "Transformer-XL: Attentive Language Models beyond a Fixed-Length Context",
+          "authors": [
+            "Zihang Dai",
+            "Zhilin Yang",
+            "Yiming Yang"
+          ],
+          "teaches": "Introducing recurrence into Transformers to handle longer contexts by caching hidden states, overcoming the fixed-length limitation.",
+          "why_here": "Addresses a key limitation of the original Transformer (fixed context window) and enables modeling of long-range dependencies."
+        }
+      ],
+      "error": null
+    },
+    {
+      "topic": "reinforcement learning from human feedback",
+      "seconds": 24.846698875000584,
+      "step_count": 7,
+      "degraded": false,
+      "confidence": 0.75,
+      "confidence_reasons": [
+        "1 step(s) are an approximate match for what was planned",
+        "part of the plan could not be found and was dropped"
+      ],
+      "notes": [
+        "Planned 'Policy Gradient Methods for Reinforcement Learning with Func' resolved to 'Policy Gradient Methods for Reinforcement Learning with Func' (0.82); its rationale was discarded rather than reattached to a different paper.",
+        "1 planned step(s) named a paper that could not be found and were dropped rather than substituted: 'Algorithms for Inverse Reinforcement Learning'",
+        "7 steps: 2 prerequisite, 1 anchor, 4 follow-up. Planned by deepseek-v4-pro:cloud."
+      ],
+      "stages_run": [
+        "strategy:syllabus"
+      ],
+      "steps": [
+        {
+          "position": 1,
+          "stage": "prerequisite",
+          "year": 2017,
+          "title": "Policy Gradient Methods for Reinforcement Learning with Function Approximation and Action-Dependent Baselines",
+          "authors": [
+            "Philip S. Thomas",
+            "Emma Brunskill"
+          ],
+          "teaches": "Closest available match for: Fundamentals of policy optimization in reinforcement learning, including the policy gradient theorem.",
+          "why_here": "The plan asked for 'Policy Gradient Methods for Reinforcement Learning with Function Approximation' at this position; this is the nearest paper actually found, so treat the placement as approximate."
+        },
+        {
+          "position": 2,
+          "stage": "prerequisite",
+          "year": 2012,
+          "title": "Preference-based reinforcement learning: a formal framework and a policy iteration algorithm",
+          "authors": [
+            "Johannes F\u00fcrnkranz",
+            "Eyke H\u00fcllermeier",
+            "Weiwei Cheng"
+          ],
+          "teaches": "Formalizing RL with preferences instead of numerical rewards, and an algorithm for policy iteration.",
+          "why_here": "This is the direct precursor to deep RLHF, establishing the framework of learning from pairwise preferences."
+        },
+        {
+          "position": 3,
+          "stage": "anchor",
+          "year": 2017,
+          "title": "Deep reinforcement learning from human preferences",
+          "authors": [
+            "Paul Christiano",
+            "Jan Leike",
+            "Tom B. Brown"
+          ],
+          "teaches": "Scaling preference-based RL to deep neural networks by training a reward model from human comparisons and optimizing a policy with PPO.",
+          "why_here": "This is the seminal paper that introduced RLHF as we know it, combining deep RL with human preference learning."
+        },
+        {
+          "position": 4,
+          "stage": "followup",
+          "year": 2019,
+          "title": "Fine-Tuning Language Models from Human Preferences",
+          "authors": [
+            "Daniel M. Ziegler",
+            "Nisan Stiennon",
+            "Jeffrey Wu"
+          ],
+          "teaches": "Applying RLHF to language models for text continuation tasks, using a reward model trained on human preferences.",
+          "why_here": "Extends the anchor's method to language generation, showing its applicability beyond simulated environments."
+        },
+        {
+          "position": 5,
+          "stage": "followup",
+          "year": 2022,
+          "title": "Training Language Models to Follow Instructions with Human Feedback",
+          "authors": [
+            "Long Ouyang",
+            "Jeffrey Wu",
+            "Xu Jiang"
+          ],
+          "teaches": "Large-scale application of RLHF to instruction-following language models (InstructGPT), demonstrating alignment improvements.",
+          "why_here": "A landmark application that popularized RLHF for aligning LLMs with human intent."
+        },
+        {
+          "position": 6,
+          "stage": "followup",
+          "year": 2023,
+          "title": "Direct Preference Optimization: Your Language Model is Secretly a Reward Model",
+          "authors": [
+            "Rafael Rafailov",
+            "Archit Sharma",
+            "Eric Mitchell"
+          ],
+          "teaches": "A simpler alternative to RLHF that optimizes the policy directly from preferences without a separate reward model.",
+          "why_here": "Addresses limitations of RLHF (complexity, instability) by reparameterizing the reward model, representing a major recent development."
+        },
+        {
+          "position": 7,
+          "stage": "followup",
+          "year": 2022,
+          "title": "Scaling Laws for Reward Model Overoptimization",
+          "authors": [
+            "Leo Gao",
+            "John Schulman",
+            "Jacob Hilton"
+          ],
+          "teaches": "Analyzing how optimizing too much against a learned reward model leads to overoptimization and degradation of true performance.",
+          "why_here": "Provides a critical analysis of a key failure mode in RLHF, informing best practices."
+        }
+      ],
+      "error": null
+    }
+  ]
+}
