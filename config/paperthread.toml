@@ -1,0 +1,237 @@
+# PaperThread configuration
+#
+# This file is the ONE place providers and models are selected (REQUIREMENTS.md §11 D9).
+# Nothing here is hardcoded in application code. Secrets are NOT stored here — every
+# `api_key_env` names an environment variable to read the key from.
+#
+# Multiple providers may be enabled at once; that is the normal case, not an edge case.
+
+[app]
+# Single local user for now; every user-owned row is still keyed by user_id (D3).
+default_user_id = "local"
+
+# ---------------------------------------------------------------------------
+# Paper providers — split by CAPABILITY, not by vendor (D11).
+# Capabilities: "search", "citations", "fulltext", "id_resolve"
+# No single provider offers all three of citations + abstracts + free full text,
+# so a paper is assembled from several. See docs/PROVIDER_NOTES.md Part 1.
+# ---------------------------------------------------------------------------
+
+[[paper_providers]]
+name = "arxiv"
+enabled = true
+capabilities = ["search", "fulltext"]
+# arXiv asks for ~1 request per 3 seconds, but 429s under sustained load even at that rate
+# and sends no Retry-After. 0.2/s (one per 5s) plus the adapter's backoff keeps a whole
+# sweep alive; at 0.34 a run that leans on arXiv alone loses half its paths to throttling.
+rate_limit_per_sec = 0.2
+timeout_seconds = 20.0
+
+[[paper_providers]]
+name = "crossref"
+enabled = true
+capabilities = ["search", "id_resolve"]
+# Closes the gap arXiv structurally cannot: arXiv began in 1991 and holds preprints, so the
+# pre-2010 journal papers that make a sequence a learning path — Rumelhart 1986, Breiman
+# 1996, Tibshirani 1996, Hochreiter 1997 — are simply not there. Crossref has all of them,
+# free, keyless and unmetered. No citation graph and few abstracts, which is fine: it is
+# here to resolve titles, not to build the graph.
+mailto = "nitishkthakur@gmail.com"
+rate_limit_per_sec = 5.0
+timeout_seconds = 20.0
+
+[[paper_providers]]
+name = "openalex"
+enabled = true
+capabilities = ["search", "citations", "id_resolve"]
+# CC0, safe to cache. Abstracts arrive as an inverted index and must be reconstructed
+# (PROVIDER_NOTES C1).
+#
+# METERED since 2026 (PROVIDER_NOTES C12). Anonymous access is ~$0.10/day of credit, and a
+# search costs $0.001 — about 100 searches before a 13-hour lockout, which one evaluation
+# sweep exhausts. A FREE API key raises that tenfold; set OPENALEX_API_KEY.
+# Lookups by ID are free and unmetered, so prefer them wherever a paper is already known.
+mailto = "nitishkthakur@gmail.com"
+api_key_env = "OPENALEX_API_KEY"
+rate_limit_per_sec = 5.0
+timeout_seconds = 20.0
+
+[[paper_providers]]
+name = "semantic_scholar"
+enabled = false   # enable once an API key is set; unauthenticated limits are punishing
+capabilities = ["search", "citations"]
+# Best citation graph, plus per-edge citation `intents` and `isInfluential` for free —
+# which is how we separate genuine prerequisites from perfunctory citations.
+api_key_env = "SEMANTIC_SCHOLAR_API_KEY"
+rate_limit_per_sec = 1.0
+timeout_seconds = 20.0
+
+# ---------------------------------------------------------------------------
+# LLM providers (D10). Default: Ollama Cloud.
+# Model is selected PER TASK ROLE, not globally — decomposition is cheap and frequent,
+# prerequisite judgment is expensive and quality-critical.
+# ---------------------------------------------------------------------------
+
+[llm]
+# The local Ollama daemon reaches Ollama CLOUD models (`*:cloud`) when you are signed in
+# with `ollama signin` — no API key, no key file. That is why the default provider is the
+# local one while the models are cloud models.
+provider = "ollama_local"
+# Raw model text is never trusted. Output is validated against a JSON schema and retried
+# with the validation error fed back; after this many retries the stage degrades instead
+# of guessing.
+max_retries = 2
+max_concurrency = 4
+
+[llm.cache]
+# D2: prerequisite edges and explanations are PERSISTED data, not transient model output —
+# recomputing them per request would make the path unstable and the cost unbounded. Every
+# entry is stamped with {provider, model, prompt_version}, so changing the default model
+# cannot silently corrupt stored judgments. Path is relative to the repository root.
+enabled = true
+dir = ".cache/llm"
+
+[llm.roles]
+# role -> model chain. The FIRST entry is the primary; the rest are fallbacks, tried in
+# order when the primary is unavailable (not installed, daemon down, HTTP error, timeout,
+# or unusable output after the repair retries). A bare string is accepted and means
+# "primary only, no fallback". Unlisted roles use "default".
+#
+# Model is chosen per ROLE, not globally: planning a curriculum is a handful of hard calls,
+# while reranking and explaining are many cheap ones, and one global model prices one of
+# them wrong.
+default = ["deepseek-v4-pro:cloud", "glm-5.1:cloud", "kimi-k2.6:cloud"]
+
+# Naming the anchor work for a topic and planning the teaching sequence. Hardest call in
+# the system and the one everything downstream inherits — worth the strongest model.
+curriculum_planning = ["deepseek-v4-pro:cloud", "kimi-k2.6:cloud", "glm-5.1:cloud"]
+
+# Deciding which of a paper's real references a learner must read first.
+prerequisite_judgment = ["deepseek-v4-pro:cloud", "glm-5.1:cloud", "minimax-m2.7:cloud"]
+
+# High volume, one call per batch of papers: cheaper model, more fallbacks.
+pedagogical_rerank = ["deepseek-v4-flash:cloud", "glm-5.1:cloud", "minimax-m2.7:cloud"]
+explanation = ["deepseek-v4-flash:cloud", "minimax-m2.7:cloud", "glm-5.1:cloud"]
+topic_decomposition = ["deepseek-v4-flash:cloud", "glm-5.1:cloud", "minimax-m2.7:cloud"]
+
+[llm.providers.ollama_cloud]
+kind = "openai_compatible"
+base_url = "https://ollama.com/v1"
+api_key_env = "OLLAMA_API_KEY"
+timeout_seconds = 300.0
+structured_output = "json_object"
+
+[llm.providers.ollama_local]
+kind = "openai_compatible"
+base_url = "http://localhost:11434/v1"
+# No api_key_env: the local daemon authenticates to Ollama Cloud with the credentials
+# `ollama signin` stored in ~/.ollama. Naming a variable here would make a missing
+# environment variable look like a missing capability.
+timeout_seconds = 300.0
+# VERIFIED 2026-08-16 against Ollama 0.32.12 + cloud models: `response_format` of type
+# `json_schema` is ACCEPTED AND SILENTLY IGNORED — the model returns prose and no error.
+# Ollama's native `format: <schema>` field is ignored the same way. Only `json_object`,
+# combined with an explicit instruction in the prompt, actually yields JSON. Setting this
+# to "json_schema" therefore does not fail loudly; it just burns a repair retry on every
+# single call.
+structured_output = "json_object"
+
+[llm.providers.openrouter]
+kind = "openai_compatible"
+base_url = "https://openrouter.ai/api/v1"
+api_key_env = "OPENROUTER_API_KEY"
+timeout_seconds = 300.0
+structured_output = "json_schema"
+
+[llm.providers.anthropic]
+kind = "anthropic"
+base_url = "https://api.anthropic.com/v1"
+api_key_env = "ANTHROPIC_API_KEY"
+timeout_seconds = 300.0
+# Anthropic constrains output with a forced tool call, not response_format.
+structured_output = "tool"
+
+# ---------------------------------------------------------------------------
+# Embeddings — a SEPARATE port from LLM, deliberately (D10).
+# Ollama Cloud has no embedding models at all, and Anthropic has no embeddings API.
+# Embeddings are computed in-process; see docs/RETRIEVAL_NOTES.md L2.
+# ---------------------------------------------------------------------------
+
+[embeddings]
+enabled = false          # L2 is off in the POC; L0 must work without it (D12)
+provider = "local_sentence_transformers"
+model = "BAAI/bge-small-en-v1.5"
+dimensions = 384
+# Stored with every vector; changing either means the index must be rebuilt.
+model_revision = "main"
+
+# ---------------------------------------------------------------------------
+# Retrieval layers (D12). Each layer must be independently disableable, and
+# disabling one must degrade quality without breaking the system.
+# ---------------------------------------------------------------------------
+
+# Disk cache for provider HTTP responses. D11 requires that no provider call sits on a
+# user request path un-cached. Paper metadata is close to immutable, so entries do not
+# expire — delete the directory to refresh. Path is relative to the repository root.
+[providers.cache]
+enabled = true
+dir = ".cache/http"
+
+[retrieval]
+candidates_per_provider = 25   # per subtopic, per provider
+max_candidates = 300
+
+# How a learning path is built. This is the product's main quality lever, and it is config
+# because which one wins is an empirical question — see backend/tools/eval_paths.py and
+# backend/tools/CRITIQUE_RUBRIC.md.
+#
+#   "syllabus"   LLM plans the teaching sequence, every step resolved to a real paper.
+#                Best measured score (15.2/25 vs 1.5 for structural over ten topics).
+#   "anchor"     LLM names the target paper; its REAL references supply the prerequisites.
+#   "rerank"     Existing retrieval, LLM imposes a teaching order over it.
+#   "hybrid"     "syllabus", falling through to "anchor" when too little of it resolves.
+#   "structural" No LLM at all: citation-graph centrality and DAG ordering.
+#
+# Anything other than "structural" needs L4. With L4 off, the pipeline falls back to
+# "structural" and says so rather than failing (D12).
+path_strategy = "syllabus"
+
+# Stage 2 — citation-graph expansion. Runs at L0: no model weights, network only for the
+# providers themselves. This is where foundational papers are actually found — they are
+# reached because many candidates CITE them in common, not because they match the query
+# text (they usually cannot: the topic's vocabulary was invented after they were written).
+[retrieval.expansion]
+enabled = true
+# How many top candidates to fetch references for. Each is one provider request, so this
+# is the main cost knob. At OpenAlex's 5 req/sec that is ~5s for 25.
+seed_papers = 25
+references_per_paper = 60
+# A paper must be cited by at least this many candidates to count as an ancestor. 1 would
+# admit every reference of every candidate — mostly noise, and it would swamp PageRank.
+min_co_citations = 3
+max_ancestors = 20
+# Second backward round: fetch the ancestors' own references, so ancestors can be ordered
+# relative to EACH OTHER. Without this every ancestor lands at level 0 in a heap, which is
+# a list, not a path.
+expand_ancestors = true
+ancestor_seeds = 12
+# Forward expansion — later developments, extensions, critiques (§4). Constrained by the
+# topic query where the provider supports it, because the raw forward set of a seminal
+# paper is tens of thousands of mostly-unrelated papers.
+forward_enabled = true
+forward_seeds = 6
+citations_per_paper = 25
+
+[retrieval.layers]
+lexical = true       # L0 — always on; the only layer that needs nothing external
+local_nlp = false    # L1
+embeddings = false   # L2
+reranking = false    # L3
+# L4 — ON. The local Ollama daemon reaches cloud models with the credentials `ollama
+# signin` stored, so this needs no API key. Turn it off to run the structural pipeline
+# only; the system degrades and says so rather than failing (D12).
+llm = true
+
+[retrieval.fusion]
+# Reciprocal Rank Fusion. k=60 is the standard constant from the original paper.
+rrf_k = 60
