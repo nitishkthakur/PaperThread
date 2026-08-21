@@ -1,0 +1,1566 @@
+/* PaperThread
+ *
+ * Two design rules, both content-true rather than decorative:
+ *
+ *  1. THE THREAD is dashed while the prerequisite EDGES are merely inferred, and solid once
+ *     a model has judged each one to be a real teaching dependency. The page's primary
+ *     structural device reports what the system actually did.
+ *  2. ERA IS COLOUR. Ochre marks pre-2015 papers, blue marks recent ones. The product's
+ *     core claim is that ancestors and entry points are different things, so the palette
+ *     carries that distinction instead of ornamenting. These two colours mean era and
+ *     nothing else — the acts of the path are distinguished by weight and label, not hue,
+ *     precisely so they cannot be confused with era.
+ *
+ * No external fonts: the UI stays fully offline, like the L0 retrieval layer. Personality
+ * comes from the type scale and from pairing a bibliographic serif against the UI sans,
+ * not from a downloaded face.
+ */
+
+:root {
+  color-scheme: light;
+
+  --ground: #eaedf1;
+  --ground-deep: #d9dfe7;
+  --raised: #ffffff;
+  --sunk: #f2f4f8;
+
+  --ink: #11151b;
+  --ink-soft: #4b5462;
+  --ink-faint: #78828f;
+
+  --rule: #d5dae2;
+  --rule-soft: #e5e9ef;
+  --thread: #b6c0cb;
+
+  --ancestor: #9d5c17;
+  --recent: #2b5b8c;
+  --alert: #8a3a1f;
+
+  --lift-1: 0 1px 2px rgb(16 22 30 / 6%), 0 1px 1px rgb(16 22 30 / 4%);
+  --lift-2: 0 2px 4px rgb(16 22 30 / 6%), 0 10px 24px -10px rgb(16 22 30 / 16%);
+  --lift-3: 0 3px 6px rgb(16 22 30 / 8%), 0 22px 44px -18px rgb(16 22 30 / 24%);
+
+  --r-sm: 4px;
+  --r: 9px;
+  --r-lg: 14px;
+
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  --measure: 52rem;
+  --gutter: 1.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+
+    --ground: #0e1218;
+    --ground-deep: #090c11;
+    --raised: #1a2029;
+    --sunk: #12171e;
+
+    --ink: #e8ebf0;
+    --ink-soft: #a3adba;
+    --ink-faint: #737e8b;
+
+    --rule: #303945;
+    --rule-soft: #252d37;
+    --thread: #414b58;
+
+    --ancestor: #d99a4e;
+    --recent: #7aa9d8;
+    --alert: #d98862;
+
+    --lift-1: 0 1px 2px rgb(0 0 0 / 30%);
+    --lift-2: 0 2px 4px rgb(0 0 0 / 30%), 0 10px 24px -10px rgb(0 0 0 / 50%);
+    --lift-3: 0 3px 6px rgb(0 0 0 / 35%), 0 22px 44px -18px rgb(0 0 0 / 60%);
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-padding-top: 4.5rem;
+}
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--recent);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.link-button {
+  padding: 0;
+  font: inherit;
+  color: var(--recent);
+  background: none;
+  border: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--recent) 40%, transparent);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.link-button:hover {
+  border-bottom-color: currentColor;
+}
+
+/* ---------- hero ---------- */
+
+.hero {
+  background: var(--ground-deep);
+  border-bottom: 1px solid var(--rule);
+  padding: clamp(3rem, 8vw, 5.5rem) var(--gutter) clamp(2.5rem, 6vw, 4rem);
+}
+
+.hero-compact {
+  padding-top: clamp(1.75rem, 4vw, 2.5rem);
+  padding-bottom: clamp(1.5rem, 3vw, 2rem);
+}
+
+.hero-inner {
+  max-width: var(--measure);
+  margin: 0 auto;
+  display: grid;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+/* Wide enough for the specimen to sit beside the thesis rather than under it. The
+ * specimen is the hero image: a real path, at a glance, before anything is built. */
+@media (min-width: 60rem) {
+  .hero-inner {
+    grid-template-columns: minmax(0, 1.2fr) minmax(17rem, 1fr);
+    gap: 3rem;
+  }
+
+  .hero-compact .hero-inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.wordmark {
+  margin: 0;
+  font-size: 1.1875rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.wordmark-thread {
+  position: relative;
+  color: var(--ink-soft);
+}
+
+/* The thread runs through the wordmark itself. */
+.wordmark-thread::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.08em;
+  border-bottom: 2px dashed var(--thread);
+}
+
+.wordmark-small {
+  font-size: 1rem;
+}
+
+.hero-headline {
+  margin: 1.75rem 0 0;
+  max-width: 20ch;
+  font-family: var(--serif);
+  font-size: clamp(2.25rem, 6vw, 3.5rem);
+  font-weight: 400;
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.hero-sub {
+  margin: 1.125rem 0 0;
+  max-width: 42rem;
+  font-size: 1.0625rem;
+  color: var(--ink-soft);
+  text-wrap: pretty;
+}
+
+/* ---------- search ---------- */
+
+.search {
+  margin-top: 2rem;
+}
+
+.hero-compact .search {
+  margin-top: 1.25rem;
+}
+
+.search-row {
+  display: flex;
+  gap: 0.5rem;
+  max-width: 40rem;
+}
+
+.search-input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.9375rem 1.0625rem;
+  font-family: var(--serif);
+  font-size: 1.1875rem;
+  color: var(--ink);
+  background: var(--raised);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  box-shadow: var(--lift-1);
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.search-input::placeholder {
+  color: var(--ink-faint);
+}
+
+.search-input:hover {
+  border-color: color-mix(in srgb, var(--ink-faint) 55%, var(--rule));
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--recent);
+  box-shadow: var(--lift-1), 0 0 0 3px color-mix(in srgb, var(--recent) 18%, transparent);
+}
+
+.search-button {
+  flex: none;
+  padding: 0 1.375rem;
+  font-family: var(--sans);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--raised);
+  background: var(--ink);
+  border: 1px solid var(--ink);
+  border-radius: var(--r);
+  box-shadow: var(--lift-1);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 120ms ease, box-shadow 120ms ease, opacity 120ms ease;
+}
+
+.search-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: var(--lift-2);
+}
+
+.search-button:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+
+.search-examples {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4375rem;
+  margin-top: 0.875rem;
+}
+
+.search-examples-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-right: 0.125rem;
+}
+
+.chip-button {
+  padding: 0.3125rem 0.6875rem;
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  color: var(--ink-soft);
+  background: color-mix(in srgb, var(--raised) 70%, transparent);
+  border: 1px solid var(--rule);
+  border-radius: 100px;
+  cursor: pointer;
+  transition: color 120ms ease, border-color 120ms ease, background 120ms ease;
+}
+
+.chip-button:hover:not(:disabled) {
+  color: var(--ink);
+  background: var(--raised);
+  border-color: var(--ink-faint);
+}
+
+.chip-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---------- sticky bar ---------- */
+
+.stickybar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  background: color-mix(in srgb, var(--ground) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--rule);
+  transform: translateY(-100%);
+  opacity: 0;
+  transition: transform 180ms ease, opacity 180ms ease;
+  pointer-events: none;
+}
+
+.stickybar-shown {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.stickybar-inner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 0.625rem var(--gutter);
+}
+
+.stickybar-search {
+  display: flex;
+  gap: 0.375rem;
+  margin-left: auto;
+  min-width: 0;
+}
+
+.stickybar-input {
+  min-width: 0;
+  width: clamp(8rem, 26vw, 16rem);
+  padding: 0.4375rem 0.625rem;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--ink);
+  background: var(--raised);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-sm);
+}
+
+.stickybar-button {
+  padding: 0.4375rem 0.875rem;
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--raised);
+  background: var(--ink);
+  border: 1px solid var(--ink);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.stickybar-button:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+
+/* ---------- shell ---------- */
+
+.shell {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: clamp(2rem, 5vw, 3rem) var(--gutter) 4rem;
+}
+
+.footer {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 1.5rem var(--gutter) 3rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.8125rem;
+  color: var(--ink-faint);
+}
+
+.footer p {
+  margin: 0;
+  max-width: 44rem;
+}
+
+/* ---------- landing ---------- */
+
+.landing {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.specimen {
+  padding: 1.5rem 1.625rem;
+  background: var(--raised);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-lg);
+  box-shadow: var(--lift-2);
+}
+
+/* The specimen is a miniature of the real thread, so it doubles as a key for reading one. */
+.specimen-thread {
+  position: relative;
+  list-style: none;
+  margin: 1.125rem 0 0;
+  padding: 0 0 0 1.625rem;
+}
+
+/* A hairline, deliberately neither the 2px solid nor the 2px dashed thread — the specimen
+ * is an illustration and must not claim either edge-quality state. */
+.specimen-thread::before {
+  content: "";
+  position: absolute;
+  top: 0.45rem;
+  bottom: 0.45rem;
+  left: 0.3125rem;
+  border-left: 1px solid var(--rule);
+}
+
+.specimen-node {
+  position: relative;
+  padding: 0 0 1rem;
+}
+
+.specimen-node:last-child {
+  padding-bottom: 0;
+}
+
+.specimen-node::before {
+  content: "";
+  position: absolute;
+  top: 0.3125rem;
+  left: -1.625rem;
+  width: 0.6875rem;
+  height: 0.6875rem;
+  border-radius: 50%;
+  background: var(--raised);
+  border: 2px solid var(--thread);
+}
+
+.specimen-ancestor::before {
+  border-color: var(--ancestor);
+  background: var(--ancestor);
+}
+
+.specimen-recent::before {
+  border-color: var(--recent);
+}
+
+.specimen-year {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--ink-faint);
+  margin-right: 0.5rem;
+}
+
+.specimen-ancestor .specimen-year {
+  color: var(--ancestor);
+}
+
+.specimen-recent .specimen-year {
+  color: var(--recent);
+}
+
+.specimen-paper {
+  font-family: var(--serif);
+  font-size: 1rem;
+}
+
+.specimen-tag {
+  display: block;
+  margin-top: 0.125rem;
+  font-size: 0.75rem;
+  color: var(--ink-faint);
+}
+
+.specimen-note {
+  margin: 1.125rem 0 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule-soft);
+  font-size: 0.875rem;
+  color: var(--ink-soft);
+}
+
+.specimen-key {
+  display: flex;
+  align-items: center;
+  gap: 0.4375rem;
+  margin: 0.75rem 0 0;
+  font-size: 0.75rem;
+  color: var(--ink-faint);
+}
+
+.key-swatch {
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 50%;
+}
+
+.key-swatch:not(:first-child) {
+  margin-left: 0.875rem;
+}
+
+.key-ancestor {
+  background: var(--ancestor);
+}
+
+.key-recent {
+  border: 2px solid var(--recent);
+}
+
+.landing-cards {
+  display: grid;
+  gap: 0.75rem;
+}
+
+@media (min-width: 46rem) {
+  .landing-cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.landing-card {
+  padding: 1.125rem 1.25rem;
+  background: var(--raised);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  box-shadow: var(--lift-1);
+}
+
+/* What the product cannot do gets the same shelf, one shade quieter — not a hidden note. */
+.landing-card-quiet {
+  background: transparent;
+  border-style: dashed;
+  box-shadow: none;
+}
+
+.landing-card-title {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+.landing-card-body {
+  margin: 0.375rem 0 0;
+  font-size: 0.875rem;
+  color: var(--ink-soft);
+}
+
+.landing-prompt {
+  margin: 0.25rem 0 0;
+  font-size: 0.9375rem;
+  color: var(--ink-soft);
+  max-width: 46rem;
+}
+
+/* ---------- building ---------- */
+
+.building {
+  padding: 1.375rem 1.5rem;
+  background: var(--raised);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-lg);
+  box-shadow: var(--lift-1);
+}
+
+.building-head {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.building-pulse {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--recent);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.7); }
+}
+
+.building-title {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.building-elapsed {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.building-body {
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+  color: var(--ink-soft);
+  max-width: 44rem;
+}
+
+.skeleton {
+  list-style: none;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+.skeleton-row {
+  display: flex;
+  gap: 0.875rem;
+  align-items: flex-start;
+}
+
+.skeleton-dot {
+  flex: none;
+  width: 0.75rem;
+  height: 0.75rem;
+  margin-top: 0.25rem;
+  border-radius: 50%;
+  border: 2px solid var(--rule);
+}
+
+.skeleton-lines {
+  flex: 1;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.skeleton-line {
+  height: 0.6875rem;
+  border-radius: var(--r-sm);
+  background: linear-gradient(
+    90deg,
+    var(--sunk) 25%,
+    color-mix(in srgb, var(--rule) 60%, var(--sunk)) 37%,
+    var(--sunk) 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+.skeleton-line-short {
+  width: 45%;
+}
+
+@keyframes shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: 0 0; }
+}
+
+/* ---------- notices ---------- */
+
+.notice {
+  padding: 1.25rem 1.375rem;
+  background: var(--raised);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--thread);
+  border-radius: var(--r);
+  box-shadow: var(--lift-1);
+}
+
+.notice-error {
+  border-left-color: var(--alert);
+}
+
+.notice-title {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.notice-error .notice-title {
+  color: var(--alert);
+}
+
+.notice-body {
+  margin: 0.375rem 0 0;
+  font-size: 0.9375rem;
+  color: var(--ink-soft);
+  max-width: 44rem;
+}
+
+.notice-action {
+  margin-top: 0.875rem;
+  padding: 0.4375rem 0.875rem;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--raised);
+  border: 1px solid var(--ink-faint);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+}
+
+.notice-action:hover:not(:disabled) {
+  background: var(--sunk);
+  border-color: var(--ink);
+}
+
+.notice-action:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ---------- path header ---------- */
+
+.pathhead {
+  margin-bottom: 1.25rem;
+}
+
+.pathhead-topic {
+  margin: 0.5rem 0 0;
+  font-family: var(--serif);
+  font-size: clamp(1.875rem, 4.5vw, 2.625rem);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.pathhead-facts {
+  margin: 0.5rem 0 0;
+  font-size: 0.9375rem;
+  color: var(--ink-soft);
+}
+
+.pathhead-facts strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ---------- confidence ---------- */
+
+.confidence {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.875rem;
+  padding: 1.125rem 1.375rem;
+  background: var(--raised);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--thread);
+  border-radius: var(--r);
+  box-shadow: var(--lift-1);
+}
+
+@media (min-width: 48rem) {
+  .confidence {
+    grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+    gap: 2.25rem;
+    align-items: center;
+  }
+}
+
+/* Colour carries the same meaning it does everywhere else in this UI: ochre is the
+ * "look closer" signal, not decoration. */
+.confidence-high {
+  border-left-color: var(--recent);
+}
+
+.confidence-medium {
+  border-left-color: var(--ancestor);
+}
+
+.confidence-low {
+  border-left-color: var(--alert);
+}
+
+.confidence-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.confidence-band {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.confidence-low .confidence-band {
+  color: var(--alert);
+}
+
+.confidence-value {
+  font-family: var(--mono);
+  font-size: 1.0625rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.confidence-meter {
+  height: 5px;
+  margin-top: 0.5rem;
+  border-radius: 100px;
+  background: var(--sunk);
+  overflow: hidden;
+}
+
+.confidence-fill {
+  display: block;
+  height: 100%;
+  border-radius: 100px;
+  background: var(--thread);
+}
+
+.confidence-high .confidence-fill { background: var(--recent); }
+.confidence-medium .confidence-fill { background: var(--ancestor); }
+.confidence-low .confidence-fill { background: var(--alert); }
+
+.confidence-headline {
+  margin: 0.625rem 0 0;
+  font-size: 0.9375rem;
+  color: var(--ink);
+}
+
+.confidence-reasons {
+  margin: 0;
+  padding-left: 1.125rem;
+  font-size: 0.875rem;
+  color: var(--ink-soft);
+}
+
+.confidence-reasons li {
+  margin-top: 0.1875rem;
+}
+
+.confidence-reasons li:first-child {
+  margin-top: 0;
+}
+
+.gaps {
+  margin: 0.875rem 0 0;
+  font-size: 0.875rem;
+  color: var(--ink-faint);
+}
+
+/* ---------- the thread ---------- */
+
+.thread {
+  margin-top: 2.5rem;
+}
+
+.thread-legend {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin: 0 0 1.5rem;
+  font-size: 0.8125rem;
+  color: var(--ink-faint);
+}
+
+.thread-legend::before {
+  content: "";
+  flex: none;
+  width: 2.25rem;
+  border-top: 2px solid var(--thread);
+}
+
+.thread-inferred .thread-legend::before {
+  border-top-style: dashed;
+}
+
+.act {
+  position: relative;
+  padding-left: 2.75rem;
+}
+
+/* The line itself. It runs continuously through every act, because the path is one
+ * sequence — the acts label stretches of it, they do not break it. */
+.act::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0.75rem;
+  border-left: 2px solid var(--thread);
+}
+
+.thread-inferred .act::before {
+  border-left-style: dashed;
+}
+
+.act:first-of-type::before {
+  top: 1.75rem;
+}
+
+/* Terminal cap. Without it the line stops in mid-air and reads as a rendering fault; with
+ * it the thread closes like a bracket around the path it encloses. */
+.act:last-of-type::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0.75rem;
+  width: 0.6875rem;
+  border-top: 2px solid var(--thread);
+}
+
+.act-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.625rem;
+  margin-bottom: 1.25rem;
+}
+
+.act-label {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.act-count {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--ink-faint);
+}
+
+.act-note {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--ink-faint);
+}
+
+.act-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Era, resolved once per node and then reused by the marker, the card rail and the year.
+ * One variable means those three can never drift apart and say different things. */
+.node {
+  position: relative;
+  padding-bottom: 1.125rem;
+  --era: var(--thread);
+}
+
+.node-ancestor { --era: var(--ancestor); }
+.node-recent { --era: var(--recent); }
+
+.act:last-of-type .node:last-child {
+  padding-bottom: 0;
+}
+
+.node-marker {
+  position: absolute;
+  top: 1.4375rem;
+  left: -2.375rem;
+  width: 0.875rem;
+  height: 0.875rem;
+  border-radius: 50%;
+  background: var(--ground);
+  border: 2px solid var(--era);
+  z-index: 1;
+}
+
+.node-ancestor .node-marker {
+  background: var(--era);
+}
+
+/* A tick from the marker to the card, so the thread and the card's era rail read as one
+ * connected run rather than as two parallel lines. */
+.node-marker::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  width: 1.5rem;
+  border-top: 1px solid var(--rule);
+}
+
+/* The one place this page raises its voice: the paper the topic is named for. Form, not
+ * hue — the two colours are spoken for by era. */
+.node-anchor .node-marker {
+  top: 1.5rem;
+  left: -2.5625rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-width: 3px;
+  background: radial-gradient(circle, var(--era) 0 34%, var(--ground) 35%);
+  box-shadow: 0 0 0 4px var(--ground);
+}
+
+.node-anchor .node-marker::after {
+  width: 1.3125rem;
+}
+
+/* ---------- paper card ---------- */
+
+.card {
+  position: relative;
+  padding: 1.125rem 1.25rem 1rem;
+  background: var(--raised);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--thread);
+  border-radius: var(--r);
+  box-shadow: var(--lift-1);
+  transition: box-shadow 140ms ease, border-color 140ms ease;
+}
+
+.card:hover {
+  box-shadow: var(--lift-2);
+}
+
+/* Era rail. The single most repeated element on the page, so it is where era-as-colour
+ * actually becomes readable at a glance. */
+.card {
+  border-left-color: var(--era);
+}
+
+.node-anchor .card {
+  border-left-width: 5px;
+  box-shadow: var(--lift-3);
+}
+
+.card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.75rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--ink-faint);
+}
+
+.card-position {
+  font-variant-numeric: tabular-nums;
+}
+
+.card-year {
+  color: var(--era);
+  font-weight: 600;
+}
+
+.card-venue {
+  font-family: var(--sans);
+  font-style: italic;
+}
+
+.card-title {
+  margin: 0.4375rem 0 0;
+  font-family: var(--serif);
+  font-size: 1.3125rem;
+  font-weight: 400;
+  line-height: 1.28;
+  letter-spacing: -0.012em;
+  text-wrap: pretty;
+}
+
+.node-anchor .card-title {
+  font-size: 1.5rem;
+}
+
+.card-title a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 22%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+.card-title a:hover {
+  text-decoration-color: currentColor;
+}
+
+.card-authors {
+  margin: 0.3125rem 0 0;
+  font-size: 0.875rem;
+  color: var(--ink-soft);
+}
+
+.card-prereq {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4375rem;
+  margin: 0.625rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--ink-soft);
+}
+
+.card-prereq-label {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.card-prereq-item:not(:last-child)::after {
+  content: " ·";
+  color: var(--ink-faint);
+}
+
+.card-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem 0.875rem;
+  margin-top: 0.875rem;
+}
+
+.card-signals {
+  display: contents;
+}
+
+.signal {
+  padding: 0.1875rem 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  border-radius: var(--r-sm);
+  color: var(--ink-soft);
+  background: var(--sunk);
+}
+
+.signal-note {
+  color: var(--ancestor);
+  background: color-mix(in srgb, var(--ancestor) 11%, transparent);
+}
+
+.signal-gap {
+  color: var(--ink-faint);
+  background: none;
+  border: 1px dashed var(--rule);
+}
+
+.card-toggle {
+  padding: 0.25rem 0;
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  color: var(--ink-soft);
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--rule);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.card-toggle:hover {
+  color: var(--ink);
+  border-bottom-color: var(--ink-faint);
+}
+
+.card-abstract {
+  margin: 0.875rem 0 0;
+  padding: 0.875rem 1rem;
+  background: var(--sunk);
+  border-radius: var(--r-sm);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+/* ---------- explanations (§5) ---------- */
+
+.explain {
+  margin-top: 0.875rem;
+  padding: 0.875rem 1rem;
+  background: var(--sunk);
+  border-left: 2px solid color-mix(in srgb, var(--recent) 50%, transparent);
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+}
+
+/* Dashed edge: measured from the graph, not reasoned. The distinction is the point. */
+.explain-structural {
+  border-left-style: dashed;
+  border-left-color: var(--thread);
+}
+
+.explain-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.125rem 1rem;
+  margin: 0;
+}
+
+@media (min-width: 34rem) {
+  .explain-grid {
+    grid-template-columns: 8.25rem minmax(0, 1fr);
+    gap: 0.4375rem 1rem;
+  }
+}
+
+.explain-grid dt {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  padding-top: 0.125rem;
+}
+
+.explain-grid dt:not(:first-of-type) {
+  margin-top: 0.5rem;
+}
+
+@media (min-width: 34rem) {
+  .explain-grid dt:not(:first-of-type) {
+    margin-top: 0;
+  }
+}
+
+.explain-grid dd {
+  margin: 0 0 0.25rem;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+@media (min-width: 34rem) {
+  .explain-grid dd {
+    margin-bottom: 0;
+  }
+}
+
+.explain-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.625rem;
+  margin: 0.75rem 0 0;
+  padding-top: 0.625rem;
+  border-top: 1px solid var(--rule-soft);
+}
+
+.explain-badge {
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.explain-llm .explain-badge {
+  color: var(--recent);
+}
+
+.explain-by {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  color: var(--ink-faint);
+  overflow-wrap: anywhere;
+}
+
+/* ---------- lines of work ---------- */
+
+.subtopics {
+  margin-bottom: 1.5rem;
+  padding: 1.125rem 1.375rem;
+  background: var(--raised);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  box-shadow: var(--lift-1);
+}
+
+.subtopics-head {
+  margin-bottom: 0.875rem;
+}
+
+.subtopics-title {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.subtopics-hint {
+  margin: 0.1875rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--ink-faint);
+}
+
+.subtopics-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.625rem;
+}
+
+.subtopic {
+  display: flex;
+  gap: 0.625rem;
+  align-items: baseline;
+}
+
+.subtopic-mark {
+  flex: none;
+  width: 1.25rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--ink-faint);
+}
+
+.subtopic-label {
+  font-size: 0.9375rem;
+  color: var(--ink);
+}
+
+.subtopic-summary {
+  margin: 0.125rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--ink-faint);
+}
+
+/* ---------- build log ---------- */
+
+.buildlog {
+  margin-top: 3rem;
+  padding: 1.375rem 1.5rem 1.5rem;
+  background: var(--sunk);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-lg);
+  scroll-margin-top: 4.5rem;
+}
+
+.buildlog-title {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.buildlog-verdict {
+  margin: 0.75rem 0 0;
+  font-size: 0.9375rem;
+  color: var(--ink-soft);
+  max-width: 46rem;
+}
+
+.buildlog-verdict strong {
+  color: var(--ink);
+}
+
+.buildlog-grid {
+  display: grid;
+  gap: 1.25rem;
+  margin-top: 1.375rem;
+}
+
+@media (min-width: 40rem) {
+  .buildlog-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 2rem;
+  }
+}
+
+.buildlog-label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin: 0 0 0.5rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.buildlog-strategy {
+  font-family: var(--mono);
+  letter-spacing: 0;
+  text-transform: none;
+  font-weight: 400;
+  color: var(--ink-soft);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.375rem;
+  padding: 0.1875rem 0.5rem;
+  font-size: 0.75rem;
+  border: 1px solid transparent;
+  border-radius: var(--r-sm);
+}
+
+.chip-tier {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+}
+
+.chip-on,
+.chip-ran {
+  color: var(--recent);
+  border-color: color-mix(in srgb, var(--recent) 45%, transparent);
+  background: color-mix(in srgb, var(--recent) 8%, transparent);
+}
+
+.chip-off,
+.chip-skipped {
+  color: var(--ink-faint);
+  border-color: var(--rule);
+  border-style: dashed;
+}
+
+/* Not built at all — distinct from "built but did not run for this topic". */
+.chip-unbuilt {
+  color: var(--ink-faint);
+  border-color: var(--rule);
+  border-style: dashed;
+  text-decoration: line-through;
+}
+
+.buildlog-notes {
+  list-style: none;
+  margin: 1.375rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4375rem;
+}
+
+.note {
+  padding-left: 0.875rem;
+  border-left: 2px solid var(--rule);
+  font-size: 0.8125rem;
+  color: var(--ink-faint);
+}
+
+.note-warn {
+  color: var(--alert);
+  border-left-color: var(--alert);
+}
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 34rem) {
+  :root {
+    --gutter: 1rem;
+  }
+
+  .search-row {
+    flex-direction: column;
+  }
+
+  .search-button {
+    padding: 0.8125rem 1.25rem;
+  }
+
+  .stickybar-inner .wordmark {
+    display: none;
+  }
+
+  .stickybar-search {
+    width: 100%;
+  }
+
+  .stickybar-input {
+    flex: 1;
+    width: auto;
+  }
+
+  .specimen {
+    padding: 1.25rem;
+  }
+
+  .act {
+    padding-left: 1.75rem;
+  }
+
+  .act::before {
+    left: 0.5rem;
+  }
+
+  .node-marker {
+    left: -1.625rem;
+  }
+
+  .node-marker::after {
+    width: 0.75rem;
+  }
+
+  .node-anchor .node-marker {
+    left: -1.8125rem;
+  }
+
+  .node-anchor .node-marker::after {
+    width: 0.5625rem;
+  }
+
+  .card {
+    padding: 1rem 1rem 0.875rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .search-button:hover:not(:disabled) {
+    transform: none;
+  }
+}
